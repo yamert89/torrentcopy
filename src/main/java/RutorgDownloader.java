@@ -50,7 +50,7 @@ public class RutorgDownloader {
 
             body = elements.first().html();
 
-            String urlIMG = elements.first().getElementsByTag("var").first().attr("title");
+            String urlIMG = elements.first().getElementsByClass("postImg postImgAligned img-right").first().attr("src");
 
             elements = document.getElementsByAttributeValue("class", "nav w100 pad_2").first().children();
 
