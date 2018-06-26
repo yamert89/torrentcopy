@@ -13,17 +13,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-public class Downloader {
-    private String bb_session = "";
-    private String bb_t = "";
+/**
+ * Created by Пендальф Синий on 24.06.2018.
+ */
+public class Free_torrents {
+    private String _ga = "";
+    private String bbe_data = "";
+    private String _gid = "";
 
-    public Downloader(String bb_session, String bb_t) {
-        this.bb_session = bb_session;
-        this.bb_t = bb_t;
+
+    public Free_torrents(String _ga, String bbe_t, String _gid) {
+        this._ga = _ga;
+        this.bbe_data = bbe_t;
+        this._gid = _gid;
     }
 
     public boolean download(String id){
-        String URL = "https://rutracker.org/forum/viewtopic.php?t=" + id;
+        String URL = "http://free-torrents.org/forum/viewtopic1.php?t=" + id;
 
         Document document = null;
         Elements elements = null;
@@ -41,22 +47,23 @@ public class Downloader {
 
 
             document = Jsoup.connect(URL).userAgent("Mozilla").timeout(40000).referrer(URL).get();
-            name = document.getElementsByClass("topic-title-" + id).first().text();
+            name = document.getElementsByClass("maintitle").get(0).text();
 
-            elements = document.getElementsByClass("post_body");
+            elements = document.getElementsByClass("post_wrap");
 
             body = elements.first().html();
 
-            String urlIMG = elements.first().getElementsByTag("var").first().attr("title");
+            //String urlIMG = elements.first().getElementsByClass("nav").text();
+            String urlIMG = "";
 
-            elements = document.getElementsByAttributeValue("class", "nav w100 pad_2").first().children();
+            elements = document.getElementsByClass("nav").first().getAllElements();
 
 
 
             StringBuilder sb = new StringBuilder();
 
-            for (Element element :
-                    elements) {
+            for (int i = 5; i < elements.size(); i++) {
+                Element element = elements.get(i);
                 sb.append(element.text());
             }
 
@@ -71,23 +78,22 @@ public class Downloader {
 
 
 
-            Connection.Response response = Jsoup.connect("https://rutracker.org/forum/dl.php?t=" + id).header("Content-Type", "text/*")
-                    .cookie("bb_ssl", "1")
-                    .cookie("bb_session", bb_session)
-                    //.cookie("bb_t", bb_t)
-                    .cookie("bb_dev", "1-3")
-                    .cookie("SLG_GWPT_Show_Hide_tmp", "1")
-                    .cookie("SLG_wptGlobTipTmp", "1")
-                    .userAgent("Mozilla").timeout(20000).referrer("https://rutracker.org/forum/viewtopic.php?t=" + id).method(Connection.Method.POST).ignoreContentType(true)
+            Connection.Response response = Jsoup.connect("http://dl.free-torrents.org/forum/dl.php?id=" + id).header("Content-Type", "text/html")
+                    .cookie("_ga", _ga)
+                    .cookie("_gid", _gid)
+                    .cookie("bbe_t", bbe_data)
+                    .userAgent("Mozilla").timeout(20000).referrer("http://free-torrents.org/forum/viewtopic1.php?t=" + id).method(Connection.Method.GET).ignoreContentType(true)
                     .execute();
-            if (!response.body().startsWith("d")) {
-                //System.out.println("!!!! Торент невалидный !!!!");
-                throw new NullPointerException("!!!! Торент невалидный !!!!");
-            }
+
 
             if (response.bodyAsBytes().length < 2000){
 
                 throw new NullPointerException("Торрент не найден");
+            }
+
+            if (!response.body().startsWith("d")) {
+                //System.out.println("!!!! Торент невалидный !!!!");
+                throw new NullPointerException("!!!! Торент невалидный !!!!");
             }
 
             dir = Files.createDirectories(Paths.get(nameFolder + contentPath + "/" + id));
@@ -100,18 +106,18 @@ public class Downloader {
 
 
             Path fileTor = dir.resolve(id + ".torrent");
-                    //Paths.get(dir.toAbsolutePath().toString() + id + ".torrent");
+            //Paths.get(dir.toAbsolutePath().toString() + id + ".torrent");
 
             Path fileBody = dir.resolve(id + ".html");
-                    //Paths.get(dir.toAbsolutePath().toString() + id + ".html");
+            //Paths.get(dir.toAbsolutePath().toString() + id + ".html");
             Path fileName = dir.resolve(id + ".txt");
-                    //Paths.get(dir.toAbsolutePath().toString() + id + ".txt");
+            //Paths.get(dir.toAbsolutePath().toString() + id + ".txt");
 
             Properties prop = new Properties();
             prop.setProperty("fileName", name);
             prop.setProperty("urlIMG", urlIMG);
             prop.setProperty("categoryPath", categoryPath);
-           ;
+            ;
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream( fileName.toFile()), "UTF-8");
             prop.store(writer,null);
 

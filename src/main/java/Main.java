@@ -164,7 +164,7 @@ public class Main {
             System.out.println(Thread.currentThread().toString() + " started");
             Platform.runLater(() -> GuiStart.updCountVisitLinks(startVal));
             startVal = 0;
-            boolean downloaded = new Downloader(bb_session, bb_t).download(String.valueOf(index));
+            boolean downloaded = new Rutracker(bb_session, bb_t).download(String.valueOf(index));
             if (downloaded) downloadedCounter.getAndIncrement();
             if (downloadedCounter.get() > 900){
                 Connection.Response response1 = null;

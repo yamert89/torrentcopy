@@ -13,14 +13,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Properties;
 
-/**
- * Created by Пендальф Синий on 24.06.2018.
- */
-public class RutorgDownloader {
+
+
+public class Rutracker {
     private String bb_session = "";
     private String bb_t = "";
 
-    public RutorgDownloader(String bb_session, String bb_t) {
+    public Rutracker(String bb_session, String bb_t) {
         this.bb_session = bb_session;
         this.bb_t = bb_t;
     }
@@ -44,13 +43,13 @@ public class RutorgDownloader {
 
 
             document = Jsoup.connect(URL).userAgent("Mozilla").timeout(40000).referrer(URL).get();
-            name = document.getElementsByClass("maintitle").get(0).text();
+            name = document.getElementsByClass("topic-title-" + id).first().text();
 
             elements = document.getElementsByClass("post_body");
 
             body = elements.first().html();
 
-            String urlIMG = elements.first().getElementsByClass("postImg postImgAligned img-right").first().attr("src");
+            String urlIMG = elements.first().getElementsByTag("var").first().attr("title");
 
             elements = document.getElementsByAttributeValue("class", "nav w100 pad_2").first().children();
 
@@ -103,18 +102,18 @@ public class RutorgDownloader {
 
 
             Path fileTor = dir.resolve(id + ".torrent");
-            //Paths.get(dir.toAbsolutePath().toString() + id + ".torrent");
+                    //Paths.get(dir.toAbsolutePath().toString() + id + ".torrent");
 
             Path fileBody = dir.resolve(id + ".html");
-            //Paths.get(dir.toAbsolutePath().toString() + id + ".html");
+                    //Paths.get(dir.toAbsolutePath().toString() + id + ".html");
             Path fileName = dir.resolve(id + ".txt");
-            //Paths.get(dir.toAbsolutePath().toString() + id + ".txt");
+                    //Paths.get(dir.toAbsolutePath().toString() + id + ".txt");
 
             Properties prop = new Properties();
             prop.setProperty("fileName", name);
             prop.setProperty("urlIMG", urlIMG);
             prop.setProperty("categoryPath", categoryPath);
-            ;
+           ;
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream( fileName.toFile()), "UTF-8");
             prop.store(writer,null);
 
@@ -127,7 +126,8 @@ public class RutorgDownloader {
 
             System.out.println("Downloaded: " + fileTor + "\n" + URL);
             /*int finalSum = Main.sum();*/
-            Platform.runLater(GuiStart::updText);
+            Platform.runLater(()->GuiStart.updText());
+
 
 
 

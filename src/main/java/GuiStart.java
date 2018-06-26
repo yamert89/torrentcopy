@@ -14,6 +14,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -25,15 +26,19 @@ import java.io.PrintStream;
 
 public class GuiStart extends Application {
 
-    public static Label textArea;
-    public static Label countLinks;
+    public static Label countLoaded;
+    public static Label countVisited;
     public static TextArea text;
-    TextField textFieldS;
-    TextField textFieldT;
-    private static int count;
-    private static int countVisit;
-    private static int countPoint;
-    private static int countText;
+    private TextField cookieName1;
+    private TextField cookieName2;
+    private TextField cookieName3;
+    private TextField cookieVal1;
+    private TextField cookieVal2;
+    private TextField cookieVal3;
+    public static int count;
+    public static int countVisit;
+    public static int countPoint;
+    public static int countText;
     private PrintStream errorStream;
 
     public static void main(String[] args) {
@@ -63,7 +68,7 @@ public class GuiStart extends Application {
                 Task<Void> task = new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        Main.execute(textFieldS.getText(), textFieldT.getText());
+                        Main.execute(cookieName1.getText(), cookieVal1.getText());
                         return null;
                     }
                 };
@@ -84,30 +89,47 @@ public class GuiStart extends Application {
             }
         });
 
-        textArea = new Label("");
-        textArea.setMinWidth(80);
-        textArea.setStyle("-fx-border-style: solid; -fx-border-width: 2px; -fx-border-radius: 3px; -fx-background-color: antiquewhite");
-        textArea.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+        countLoaded = new Label("");
+        countLoaded.setMinWidth(80);
+        countLoaded.setStyle("-fx-border-style: solid; -fx-border-width: 2px; -fx-border-radius: 3px; -fx-background-color: antiquewhite");
+        countLoaded.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 
 
 
 
 
-        Label label = new Label("Загружено ссылок:");
-        Label label2 = new Label("Проверено ссылок:");
-        Label sesL = new Label("bb_session");
-        Label bbL = new Label("bb_t");
-        countLinks = new Label();
-        countLinks.setStyle("-fx-border-style: solid; -fx-border-width: 2px; -fx-border-radius: 3px; -fx-background-color: antiquewhite");
-        countLinks.setMinWidth(80);
-        countLinks.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+        Label label = new Label("Загружено ссылок:   ");
+        Label label2 = new Label("Проверено ссылок:  ");
+
+        countVisited = new Label();
+        countVisited.setStyle("-fx-border-style: solid; -fx-border-width: 2px; -fx-border-radius: 3px; -fx-background-color: antiquewhite");
+        countVisited.setMinWidth(80);
+        countVisited.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
         TextArea text = new TextArea();
         text.setMinHeight(200);
         text.setMinWidth(600);
         text.setEditable(false);
 
-        textFieldS = new TextField();
-        textFieldT = new TextField();
+        cookieName1 = new TextField();
+        cookieVal1 = new TextField();
+        cookieName2 = new TextField();
+        cookieVal2 = new TextField();
+        cookieName3 = new TextField();
+        cookieVal3 = new TextField();
+
+        HBox firstCookie = new HBox(cookieName1, cookieVal1);
+        HBox secondCookie = new HBox(cookieName2, cookieVal2);
+        HBox thirdCookie = new HBox(cookieName3, cookieVal3);
+        HBox loaded = new HBox(label, countLoaded);
+        HBox visited = new HBox(label2, countVisited);
+        HBox buttons = new HBox(btnStart, btnStop);
+
+        firstCookie.setAlignment(Pos.CENTER);
+        secondCookie.setAlignment(Pos.CENTER);
+        thirdCookie.setAlignment(Pos.CENTER);
+        loaded.setAlignment(Pos.CENTER);
+        visited.setAlignment(Pos.CENTER);
+        buttons.setAlignment(Pos.CENTER);
 
 
 
@@ -115,7 +137,7 @@ public class GuiStart extends Application {
 
 
 
-        vBox.getChildren().addAll(sesL, textFieldS, bbL, textFieldT, label,textArea, label2, countLinks, text, btnStart, btnStop);
+        vBox.getChildren().addAll(firstCookie, secondCookie, thirdCookie, loaded, visited, text, buttons);
         anchorPane.getChildren().add(vBox);
         Stage stage = new Stage(StageStyle.DECORATED);
         stage.setScene(new Scene(anchorPane, 600, 400));
@@ -131,12 +153,12 @@ public class GuiStart extends Application {
     public static void updCountVisitLinks(int start){
         if (start > 0) countVisit = start;
         else countVisit++;
-        countLinks.setText(String.valueOf(countVisit));
+        countVisited.setText(String.valueOf(countVisit));
     }
     public static void updText(){
         count ++;
         countPoint++;
-        textArea.setText(String.valueOf(count));
+        countLoaded.setText(String.valueOf(count));
         if (countText > 1048576) text.setText("............... page .............");
         if (countPoint > 200) {
             text.setText(text.getText() + "\n");
