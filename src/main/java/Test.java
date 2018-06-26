@@ -2,15 +2,18 @@ import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by porohin on 26.06.2018.
  */
 public class Test {
     public static void main(String[] args) {
-        Free_torrents free_torrents = new Free_torrents("GA1.2.1448130846.1530006249","a%3A3%3A%7Bs%3A2%3A%22u" +
-                "k%22%3Bs%3A12%3A%22O1EKcz8nI0G1%22%3Bs%3A3%3A%22uid%22%3Bi%3A3497771%3Bs%3A3%3A%22sid%22%3Bs%3A20%3A%22suD" +
-                "Hm6Asixr1T1AKtzlH%22%3B%7D", "GA1.2.31082032.1530006249");
+        Map<String, String> cookies = new HashMap<>();
+        cookies.put("bbe_data", "a%3A3%3A%7Bs%3A2%3A%22uk%22%3BN%3Bs%3A3%3A%22uid%22%3Bi%3A3497771%3Bs%3A3%3A%22sid%22%3Bs%3A20%3A%22P1MLKc5qrSYqmJX1LBMs%22%3B%7D");
+
+        Free_torrents freeTorrents = new Free_torrents("K:\\save\\FreeTorents", cookies, "218409");
         Connection.Response response1 = null;
         try {
             response1 = Jsoup.connect("http://login.free-torrents.org/forum/login.php")
@@ -29,6 +32,6 @@ public class Test {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        free_torrents.download("218875");
+        freeTorrents.download();
     }
 }

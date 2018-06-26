@@ -1,64 +1,46 @@
-import javafx.application.Platform;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * Created by Пендальф Синий on 24.06.2018.
  */
-public class Free_torrents {
-    private String _ga = "";
-    private String bbe_data = "";
-    private String _gid = "";
+public class Free_torrents extends Downloader{
+    private String URL = "http://free-torrents.org/forum/viewtopic1.php?t=";
 
-
-    public Free_torrents(String _ga, String bbe_t, String _gid) {
-        this._ga = _ga;
-        this.bbe_data = bbe_t;
-        this._gid = _gid;
+    public Free_torrents(String nameFolder, Map<String, String> cookies, String id) {
+        super(nameFolder, cookies, id);
+        URL = URL + id;
     }
 
-    public boolean download(String id){
+
+
+
+    /*public boolean download(String id){
         String URL = "http://free-torrents.org/forum/viewtopic1.php?t=" + id;
 
-        Document document = null;
-        Elements elements = null;
-        String name = "";
-        String body = "";
-        String nameFolder = "K:/save/";
-        Path dir;
 
 
+    }*/
 
-
-
+    @Override
+    public boolean download() {
         try {
-
-
-
             document = Jsoup.connect(URL).userAgent("Mozilla").timeout(40000).referrer(URL).get();
-            name = document.getElementsByClass("maintitle").get(0).text();
 
-            elements = document.getElementsByClass("post_wrap");
+            getName();
+            getBody();
 
-            body = elements.first().html();
 
             //String urlIMG = elements.first().getElementsByClass("nav").text();
             String urlIMG = "";
 
             elements = document.getElementsByClass("nav").first().getAllElements();
-
-
 
             StringBuilder sb = new StringBuilder();
 
@@ -67,89 +49,64 @@ public class Free_torrents {
                 sb.append(element.text());
             }
 
-            String categoryPath = sb.toString();
+            categoryPath = sb.toString();
 
-            String contentPath = categoryPath.replace('»','/');
+            contentPath = categoryPath.replace('»','/');
             if (Files.exists(Paths.get(nameFolder + contentPath + "/" + id))) {
                 System.out.println("torrent already exist:" + name + " "+ id);
 
                 return false;
             }
 
+            downloadTorrent();
 
+            dir = Files.createDirectories(Paths.get(nameFolder + "/" + contentPath + "/" + id));
 
-            Connection.Response response = Jsoup.connect("http://dl.free-torrents.org/forum/dl.php?id=" + id).header("Content-Type", "text/html")
-                    .cookie("_ga", _ga)
-                    .cookie("_gid", _gid)
-                    .cookie("bbe_t", bbe_data)
-                    .userAgent("Mozilla").timeout(20000).referrer("http://free-torrents.org/forum/viewtopic1.php?t=" + id).method(Connection.Method.GET).ignoreContentType(true)
-                    .execute();
-
-
-            if (response.bodyAsBytes().length < 2000){
-
-                throw new NullPointerException("Торрент не найден");
-            }
-
-            if (!response.body().startsWith("d")) {
-                //System.out.println("!!!! Торент невалидный !!!!");
-                throw new NullPointerException("!!!! Торент невалидный !!!!");
-            }
-
-            dir = Files.createDirectories(Paths.get(nameFolder + contentPath + "/" + id));
-
-
-
-
-
-
-
-
-            Path fileTor = dir.resolve(id + ".torrent");
-            //Paths.get(dir.toAbsolutePath().toString() + id + ".torrent");
-
-            Path fileBody = dir.resolve(id + ".html");
-            //Paths.get(dir.toAbsolutePath().toString() + id + ".html");
-            Path fileName = dir.resolve(id + ".txt");
-            //Paths.get(dir.toAbsolutePath().toString() + id + ".txt");
-
-            Properties prop = new Properties();
-            prop.setProperty("fileName", name);
-            prop.setProperty("urlIMG", urlIMG);
-            prop.setProperty("categoryPath", categoryPath);
-            ;
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream( fileName.toFile()), "UTF-8");
-            prop.store(writer,null);
-
-
-
-            Files.write(fileTor, response.bodyAsBytes());
-            Files.write(fileBody, body.getBytes());
-            writer.close();
-
-
-            System.out.println("Downloaded: " + fileTor + "\n" + URL);
-            /*int finalSum = Main.sum();*/
-            Platform.runLater(GuiStart::updText);
-
-
-
-
-
-
-
+            fileSystemElementsCreate();
 
         } catch (IOException e) {
             e.printStackTrace();
             return false;
         } catch (NullPointerException e){
-            //e.printStackTrace();
+            e.printStackTrace();
             System.out.println("Данных нет " + id + " - " + e.getMessage());
             return false;
 
-
         }
         return true;
+    }
+
+    @Override
+    public void getName() {
+        name = document.getElementsByClass("maintitle").get(0).text();
+    }
+
+    @Override
+    public void getBody() {
+        elements = document.getElementsByClass("post_wrap");
+        body = elements.first().html();
+    }
+
+    @Override
+    public void downloadTorrent() throws IOException {
+        response = Jsoup.connect("http://dl.free-torrents.org/forum/dl.php?id=" + "160783")
+                .header("Content-Type", "text/html")
+                .header("Accept-Encoding", "gzip, deflate")
+                .header("Connection", "keep-alive")
+                .cookies(cookies)
+                .userAgent("Mozilla").timeout(20000)
+                .referrer("http://free-torrents.org/forum/viewtopic1.php?t=" + id)
+                .method(Connection.Method.GET).ignoreContentType(true)
+                .execute();
+
+        if (response.bodyAsBytes().length < 2000){
+            throw new NullPointerException("Торрент не найден");
+        }
+
+        /*if (!response.body().startsWith("d")) {
+            //System.out.println("!!!! Торент невалидный !!!!");
+            throw new NullPointerException("!!!! Торент невалидный !!!!");
+        }*/
 
     }
 }
