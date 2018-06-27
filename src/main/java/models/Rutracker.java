@@ -1,3 +1,6 @@
+package models;
+
+import gui.GuiStart;
 import javafx.application.Platform;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -125,8 +128,8 @@ public class Rutracker {
 
 
             System.out.println("Downloaded: " + fileTor + "\n" + URL);
-            /*int finalSum = Main.sum();*/
-            Platform.runLater(()->GuiStart.updText());
+            /*int finalSum = executor.Main.sum();*/
+            Platform.runLater(()-> GuiStart.updText());
 
 
 

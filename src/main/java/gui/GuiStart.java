@@ -1,7 +1,8 @@
-/**
+package gui; /**
  * Created by Пендальф Синий on 06.06.2018.
  */
 
+import executor.Main;
 import javafx.application.Application;
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
@@ -23,6 +24,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GuiStart extends Application {
 
@@ -68,7 +71,12 @@ public class GuiStart extends Application {
                 Task<Void> task = new Task<Void>() {
                     @Override
                     protected Void call() throws Exception {
-                        Main.execute(cookieName1.getText(), cookieVal1.getText());
+                        Map<String, String> cookies = new HashMap<>();
+                        if (!cookieName1.getText().isEmpty()) cookies.put(cookieName1.getText(), cookieVal1.getText());
+                        if (!cookieName2.getText().isEmpty()) cookies.put(cookieName2.getText(), cookieVal2.getText());
+                        if (!cookieName3.getText().isEmpty()) cookies.put(cookieName3.getText(), cookieVal3.getText());
+
+                        Main.execute(cookies);
                         return null;
                     }
                 };

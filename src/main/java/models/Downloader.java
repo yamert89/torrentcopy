@@ -1,3 +1,5 @@
+package models;
+
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -28,6 +30,10 @@ public abstract class Downloader {
     public String categoryPath;
     public String contentPath;
     public Connection.Response response;
+    public static final int STATUS_OK = 1;
+    public static final int STATUS_NULL = 0;
+    public static final int STATUS_EXIST = 2;
+    public static final int STATUS_FATAL = -1;
 
     public Downloader(String nameFolder, Map<String, String> cookies, String id) {
         this.nameFolder = nameFolder;
@@ -57,8 +63,8 @@ public abstract class Downloader {
 
 
         System.out.println("Downloaded: " + fileTor + "\n" + URL);
-            /*int finalSum = Main.sum();*/
-        //Platform.runLater(GuiStart::updText); TODO uncomment
+            /*int finalSum = executor.Main.sum();*/
+        //Platform.runLater(gui.GuiStart::updText); TODO uncomment
     }
 
     abstract public void getName();

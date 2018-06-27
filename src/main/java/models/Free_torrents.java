@@ -1,3 +1,5 @@
+package models;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -5,16 +7,17 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Paths;
 import java.util.Map;
 
 /**
  * Created by Пендальф Синий on 24.06.2018.
  */
-public class Free_torrents extends Downloader{
+public class Free_torrents extends Downloader {
     private String URL = "http://free-torrents.org/forum/viewtopic1.php?t=";
     private String downloadAddress = "http://dl.free-torrents.org/forum/dl.php?id=";
-    //TODO Error code
+
 
     public Free_torrents(String nameFolder, Map<String, String> cookies, String id) {
         super(nameFolder, cookies, id);
@@ -54,7 +57,7 @@ public class Free_torrents extends Downloader{
             if (Files.exists(Paths.get(nameFolder + contentPath + "/" + id))) {
                 System.out.println("torrent already exist:" + name + " "+ id);
 
-                return 0;
+                return STATUS_EXIST;
             }
 
             downloadTorrent();
@@ -63,16 +66,21 @@ public class Free_torrents extends Downloader{
 
             fileSystemElementsCreate();
 
-        } catch (IOException e) {
+        }catch (NoSuchFileException e){
             e.printStackTrace();
-            return 0;
+            System.out.println(e.getMessage());
+            return STATUS_FATAL;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+
         } catch (NullPointerException e){
             e.printStackTrace();
             System.out.println("Данных нет " + id + " - " + e.getMessage());
-            return 0;
+            return STATUS_NULL;
 
         }
-        return 0;
+        return STATUS_OK;
     }
 
     @Override
@@ -81,7 +89,7 @@ public class Free_torrents extends Downloader{
     }
 
     @Override
-    public void getBody() {
+    public void getBody() {//TODO Урезать контент
         elements = document.getElementsByClass("post_wrap");
         body = elements.first().html();
     }
@@ -103,7 +111,7 @@ public class Free_torrents extends Downloader{
         }
 
         if (!response.body().startsWith("d")) {
-            throw new NullPointerException("!!!! Торент невалидный !!!!");
+            throw new NoSuchFileException("!!!! Торент невалидный !!!!");
         }
 
     }

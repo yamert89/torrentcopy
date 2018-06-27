@@ -587,9 +587,9 @@ instanceKlass javafx/scene/control/Label$$Lambda$75
 instanceKlass javafx/scene/control/Label$$Lambda$74
 instanceKlass javafx/beans/value/ChangeListener
 instanceKlass java/lang/invoke/LambdaForm$DMH
-instanceKlass GuiStart$2
+instanceKlass gui.GuiStart$2
 instanceKlass com/sun/javafx/scene/EventHandlerProperties
-instanceKlass GuiStart$1
+instanceKlass gui.GuiStart$1
 instanceKlass javafx/event/WeakEventHandler
 instanceKlass com/sun/javafx/event/CompositeEventHandler$EventProcessorRecord
 instanceKlass com/sun/javafx/event/CompositeEventHandler

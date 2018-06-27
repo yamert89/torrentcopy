@@ -1,5 +1,6 @@
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import models.Free_torrents;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,19 +14,19 @@ public class Test {
         Map<String, String> cookies = new HashMap<>();
         cookies.put("bbe_data", "a%3A3%3A%7Bs%3A2%3A%22uk%22%3Bs%3A12%3A%22O1EKcz8nI0G1%22%3Bs%3A3%3A%22uid%22%3Bi%3A3497771%3Bs%3A3%3A%22sid%22%3Bs%3A20%3A%22B5SxxTOWWjXj1aLNVCu1%22%3B%7D");
 
-        Free_torrents freeTorrents = new Free_torrents("D:\\save\\FreeTorents", cookies, "218409");
-        Connection.Response response1 = null;
+        Free_torrents freeTorrents = new Free_torrents("E:\\save\\FreeTorents", cookies, "218409");
+        //Connection.Response response1 = null;
         try {
-            response1 = Jsoup.connect("http://login.free-torrents.org/forum/login.php")
-                    .method(Connection.Method.GET).timeout(40000)
-                    .execute();
+            //response1 = Jsoup.connect("http://login.free-torrents.org/forum/login.php")
+            //        .method(Connection.Method.GET).timeout(40000)
+            //        .execute();
 
             Jsoup.connect("http://login.free-torrents.org/forum/login.php")
                     .referrer("http://free-torrents.org/forum/indexer1.php")
                     .data("login_username", "shurup7777")
                     .data("login_password", "yamert89")
                     .timeout(40000)
-                    .cookies(response1.cookies())
+                    //.cookies(response1.cookies())
                     .method(Connection.Method.POST)
                     .execute();
 
