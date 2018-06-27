@@ -1,6 +1,7 @@
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,37 +13,31 @@ import java.util.Map;
  */
 public class Free_torrents extends Downloader{
     private String URL = "http://free-torrents.org/forum/viewtopic1.php?t=";
-    private String downloadAddress;
+    private String downloadAddress = "http://dl.free-torrents.org/forum/dl.php?id=";
+    //TODO Error code
 
     public Free_torrents(String nameFolder, Map<String, String> cookies, String id) {
         super(nameFolder, cookies, id);
         URL = URL + id;
     }
 
-
-
-
-    /*public boolean download(String id){
-        String URL = "http://free-torrents.org/forum/viewtopic1.php?t=" + id;
-
-
-
-    }*/
-
     @Override
-    public boolean download() {
+    public int download() {
         try {
             document = Jsoup.connect(URL).userAgent("Mozilla").timeout(40000).referrer(URL).cookies(cookies).get();
 
             getName();
             getBody();
-            getDownloadLink();
+            downloadAddress += getDownloadId();
 
-
-
-
-            //String urlIMG = elements.first().getElementsByClass("nav").text();
-            String urlIMG = "";
+            Elements elements2 = elements.first().getElementsByTag("var");
+            for (Element e :
+                    elements2) {
+                if (e.attr("class").equals("postImg postImgAligned img-right")){
+                    urlIMG = e.attr("title");
+                    break;
+                }
+            }
 
             elements = document.getElementsByClass("nav").first().getAllElements();
 
@@ -59,7 +54,7 @@ public class Free_torrents extends Downloader{
             if (Files.exists(Paths.get(nameFolder + contentPath + "/" + id))) {
                 System.out.println("torrent already exist:" + name + " "+ id);
 
-                return false;
+                return 0;
             }
 
             downloadTorrent();
@@ -70,14 +65,14 @@ public class Free_torrents extends Downloader{
 
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return 0;
         } catch (NullPointerException e){
             e.printStackTrace();
             System.out.println("Данных нет " + id + " - " + e.getMessage());
-            return false;
+            return 0;
 
         }
-        return true;
+        return 0;
     }
 
     @Override
@@ -93,7 +88,7 @@ public class Free_torrents extends Downloader{
 
     @Override
     public void downloadTorrent() throws IOException {
-        response = Jsoup.connect("http://dl.free-torrents.org/forum/dl.php?id=" + "160783")
+        response = Jsoup.connect(downloadAddress)
                 .header("Content-Type", "text/html")
                 .header("Accept-Encoding", "gzip, deflate")
                 .header("Connection", "keep-alive")
@@ -107,25 +102,17 @@ public class Free_torrents extends Downloader{
             throw new NullPointerException("Торрент не найден");
         }
 
-        /*if (!response.body().startsWith("d")) {
-            //System.out.println("!!!! Торент невалидный !!!!");
+        if (!response.body().startsWith("d")) {
             throw new NullPointerException("!!!! Торент невалидный !!!!");
-        }*/
+        }
 
     }
     
-    private String getDownloadLink(){
+    private String getDownloadId(){
         String html = document.html();
-        System.out.println(html);
-        int end_idx = html.lastIndexOf("http://dl.free-torrents.org/forum/dl.php?id=");
-        int start_idx = html.indexOf("http://dl.free-torrents.org/forum/dl.php?id=");
-        int ch = 44;
-       /* for (Element el :
-                elements) {
-            int end_idx = el.html().lastIndexOf("window.location = 'http://dl.free-torrents.org/forum/dl.php?id=");
-            int start_idx = el.html().indexOf("window.location = 'http://dl.free-torrents.org/forum/dl.php?id=");
-            if (end_idx == -1) continue;
-        }*/
-        return "";
+        int start_idx = html.indexOf(downloadAddress);
+        final int offset = 44;
+        start_idx += offset;
+        return html.substring(start_idx, start_idx + 6);
     }
 }

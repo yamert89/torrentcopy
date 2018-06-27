@@ -36,7 +36,7 @@ public abstract class Downloader {
 
     }
 
-    abstract public boolean download();
+    abstract public int download();
 
     public void fileSystemElementsCreate() throws IOException {
         Path fileTor = dir.resolve(id + ".torrent");
@@ -45,7 +45,7 @@ public abstract class Downloader {
 
         Properties prop = new Properties();
         prop.setProperty("fileName", name);
-        //prop.setProperty("urlIMG", urlIMG);
+        prop.setProperty("urlIMG", urlIMG);
         prop.setProperty("categoryPath", categoryPath);
 
         OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream( fileName.toFile()), "UTF-8");
