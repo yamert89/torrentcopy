@@ -12,6 +12,7 @@ import java.util.Map;
  */
 public class Free_torrents extends Downloader{
     private String URL = "http://free-torrents.org/forum/viewtopic1.php?t=";
+    private String downloadAddress;
 
     public Free_torrents(String nameFolder, Map<String, String> cookies, String id) {
         super(nameFolder, cookies, id);
@@ -31,10 +32,13 @@ public class Free_torrents extends Downloader{
     @Override
     public boolean download() {
         try {
-            document = Jsoup.connect(URL).userAgent("Mozilla").timeout(40000).referrer(URL).get();
+            document = Jsoup.connect(URL).userAgent("Mozilla").timeout(40000).referrer(URL).cookies(cookies).get();
 
             getName();
             getBody();
+            getDownloadLink();
+
+
 
 
             //String urlIMG = elements.first().getElementsByClass("nav").text();
@@ -108,5 +112,20 @@ public class Free_torrents extends Downloader{
             throw new NullPointerException("!!!! Торент невалидный !!!!");
         }*/
 
+    }
+    
+    private String getDownloadLink(){
+        String html = document.html();
+        System.out.println(html);
+        int end_idx = html.lastIndexOf("http://dl.free-torrents.org/forum/dl.php?id=");
+        int start_idx = html.indexOf("http://dl.free-torrents.org/forum/dl.php?id=");
+        int ch = 44;
+       /* for (Element el :
+                elements) {
+            int end_idx = el.html().lastIndexOf("window.location = 'http://dl.free-torrents.org/forum/dl.php?id=");
+            int start_idx = el.html().indexOf("window.location = 'http://dl.free-torrents.org/forum/dl.php?id=");
+            if (end_idx == -1) continue;
+        }*/
+        return "";
     }
 }
