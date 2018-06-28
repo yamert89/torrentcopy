@@ -69,7 +69,10 @@ public class Free_torrents extends Downloader {
 
             downloadTorrent();
 
-            dir = Files.createDirectories(Paths.get(nameFolder + "/" + contentPath + "/" + id));
+            //prepare nameFolder
+            String nameCurrentFolder = name.replaceAll("[<>?\\\\/*;:]","");
+
+            dir = Files.createDirectories(Paths.get(nameFolder + "/" + contentPath + "/" + nameCurrentFolder));
 
             fileSystemElementsCreate();
 
@@ -96,7 +99,7 @@ public class Free_torrents extends Downloader {
     }
 
     @Override
-    public void getBody(Element previous) {//TODO Урезать контент
+    public void getBody(Element previous) {
 
         //body = elements.first().html();
         body = elements.first().getElementsByTag("span").first().html();

@@ -1,5 +1,7 @@
 package tasks;
 
+import gui.GuiStart;
+import javafx.application.Platform;
 import models.Free_torrents;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -36,7 +38,8 @@ public class Free_torrentsTask extends AbstractTask {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        freeTorrents.download();
+        int status = freeTorrents.download();
+        Platform.runLater(GuiStart::updText);
         System.out.println(Thread.currentThread().toString() + " finished");
     }
 }

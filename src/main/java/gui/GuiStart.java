@@ -42,6 +42,7 @@ public class GuiStart extends Application {
     public static int countVisit;
     public static int countPoint;
     public static int countText;
+    public static int countFatal;
     private PrintStream errorStream;
 
     public static void main(String[] args) {
@@ -80,7 +81,10 @@ public class GuiStart extends Application {
                         return null;
                     }
                 };
-                new Thread(task).start();
+                Thread generalThread = new Thread(task);
+                generalThread.start();
+
+
 
             }
         });
@@ -175,6 +179,33 @@ public class GuiStart extends Application {
 
 
         text.setText(text.getText() + ".");
+    }
+
+    public static void updText(int status){
+        /*STATUS_OK = 1;
+        STATUS_NULL = 0;
+        STATUS_EXIST = 2;
+        STATUS_FATAL = -1;*/
+        String res = "";
+
+        switch (status){
+            case 1:
+                res = "...DOWNLOADED";
+                break;
+            case 0:
+                res = "...NULL";
+                break;
+            case 2:
+                res = "...ALREADY EXIST";
+                break;
+            case -1:
+                res = "...FATAL";
+                countFatal++; //TODO
+                break;
+
+
+        }
+        text.setText(text.getText() + "\n" + res);
     }
 
     public static void updTextarea(String s){
