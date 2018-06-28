@@ -30,17 +30,24 @@ public class Free_torrents extends Downloader {
             document = Jsoup.connect(URL).userAgent("Mozilla").timeout(40000).referrer(URL).cookies(cookies).get();
 
             getName();
-            getBody();
+
             downloadAddress += getDownloadId();
+
+            Element previous = null;
+            elements = document.getElementsByClass("post_wrap");
+
 
             Elements elements2 = elements.first().getElementsByTag("var");
             for (Element e :
                     elements2) {
                 if (e.attr("class").equals("postImg postImgAligned img-right")){
                     urlIMG = e.attr("title");
+                    previous = e;
                     break;
                 }
             }
+            getBody(previous);
+
 
             elements = document.getElementsByClass("nav").first().getAllElements();
 
@@ -89,9 +96,10 @@ public class Free_torrents extends Downloader {
     }
 
     @Override
-    public void getBody() {//TODO Урезать контент
-        elements = document.getElementsByClass("post_wrap");
-        body = elements.first().html();
+    public void getBody(Element previous) {//TODO Урезать контент
+
+        //body = elements.first().html();
+        body = elements.first().getElementsByTag("span").first().html();
     }
 
     @Override

@@ -2,6 +2,7 @@ package models;
 
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.FileOutputStream;
@@ -69,7 +70,7 @@ public abstract class Downloader {
 
     abstract public void getName();
 
-    abstract public void getBody();
+    abstract public void getBody(Element previous);
 
     abstract public void downloadTorrent() throws IOException;
 
