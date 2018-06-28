@@ -79,7 +79,7 @@ public class Free_torrents extends Downloader {
         }catch (NoSuchFileException e){
             e.printStackTrace();
             System.out.println(e.getMessage());
-            return STATUS_FATAL;
+            return STATUS_NULL;
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -99,7 +99,7 @@ public class Free_torrents extends Downloader {
     }
 
     @Override
-    public void getBody(Element previous) {
+    public void getBody(Element previous) { //TODO Исправить. Выдает только заголовок
 
         //body = elements.first().html();
         body = elements.first().getElementsByTag("span").first().html();
@@ -117,12 +117,12 @@ public class Free_torrents extends Downloader {
                 .method(Connection.Method.GET).ignoreContentType(true)
                 .execute();
 
-        if (response.bodyAsBytes().length < 2000){
+        /*if (response.bodyAsBytes().length < 2000){
             throw new NullPointerException("Торрент не найден");
-        }
+        }*/
 
         if (!response.body().startsWith("d")) {
-            throw new NoSuchFileException("!!!! Торент невалидный !!!!");
+            throw new NoSuchFileException("!!!! Торент невалидный  или остутствует!!!!  - " + id);
         }
 
     }

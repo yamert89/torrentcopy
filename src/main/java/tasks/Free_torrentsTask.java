@@ -24,7 +24,7 @@ public class Free_torrentsTask extends AbstractTask {
 
         /*boolean downloaded = new RutrackerTask(bb_session, bb_t).download(String.valueOf(index));
         if (downloaded) downloadedCounter.getAndIncrement();*/ //TODO uncomment
-        Free_torrents freeTorrents = new Free_torrents("D:\\save\\FreeTorents", cookies, String.valueOf(index));
+        Free_torrents freeTorrents = new Free_torrents("K:\\save\\FreeTorents", cookies, String.valueOf(index));
 
         try {
             Jsoup.connect("http://login.free-torrents.org/forum/login.php")
@@ -39,7 +39,8 @@ public class Free_torrentsTask extends AbstractTask {
             e.printStackTrace();
         }
         int status = freeTorrents.download();
-        Platform.runLater(GuiStart::updText);
+        Platform.runLater(() -> GuiStart.updCountVisitLinks(0));
+        Platform.runLater(()->GuiStart.updText(status));
         System.out.println(Thread.currentThread().toString() + " finished");
     }
 }

@@ -1,3 +1,5 @@
+package utils;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import models.Free_torrents;

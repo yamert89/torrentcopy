@@ -19,9 +19,11 @@ public class Main {
    // private static CopyOnWriteArrayList<Boolean> collection = new CopyOnWriteArrayList<Boolean>();
     private static ExecutorService service;
     private static boolean stopped;
-    private static int startIndex = 100000;
+    private static int startIndex = 0;
+    private static int endIndex = 202800;
     private static int startVal;
     public static AtomicInteger downloadedCounter = new AtomicInteger();
+
     //public static BlockingDeque<String> set = new LinkedBlockingDeque<>();
     //public static ConcurrentMap<String, Integer> counter = new ConcurrentHashMap<>();
     //public static IntegerProperty integerProperty = new SimpleIntegerProperty(0);
@@ -59,7 +61,7 @@ public class Main {
 
 
 
-        for (int j = startIndex; j < 6000000;) {
+        for (int j = startIndex; j < endIndex;) {
             for (int i = j; i < j + 1000; i++) {
                // service.submit(new MyTask(i, bb_session, bb_t));
                 service.submit(new Free_torrentsTask(i, cookies));
@@ -80,7 +82,7 @@ public class Main {
                 System.out.println("Stopped!!!");
                 Platform.runLater(()->{
                     GuiStart.updTextarea("Stopped........");});
-                //System.exit(0);
+                System.exit(0);
                 return;
             }
 

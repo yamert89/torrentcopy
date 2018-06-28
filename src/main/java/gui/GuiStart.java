@@ -9,10 +9,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.NodeOrientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -26,6 +23,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GuiStart extends Application {
 
@@ -38,12 +36,14 @@ public class GuiStart extends Application {
     private TextField cookieVal1;
     private TextField cookieVal2;
     private TextField cookieVal3;
-    public static int count;
-    public static int countVisit;
-    public static int countPoint;
+    private CheckBox checkBox;
+    public static AtomicInteger count = new AtomicInteger();;
+    public static AtomicInteger countVisit = new AtomicInteger();;
+    public static AtomicInteger countPoint = new AtomicInteger();
     public static int countText;
     public static int countFatal;
     private PrintStream errorStream;
+    private static Thread generalThread;
 
     public static void main(String[] args) {
         launch(args);
@@ -73,15 +73,21 @@ public class GuiStart extends Application {
                     @Override
                     protected Void call() throws Exception {
                         Map<String, String> cookies = new HashMap<>();
-                        if (!cookieName1.getText().isEmpty()) cookies.put(cookieName1.getText(), cookieVal1.getText());
-                        if (!cookieName2.getText().isEmpty()) cookies.put(cookieName2.getText(), cookieVal2.getText());
-                        if (!cookieName3.getText().isEmpty()) cookies.put(cookieName3.getText(), cookieVal3.getText());
+                        if (!checkBox.isSelected()) {
+                            if (!cookieName1.getText().isEmpty())
+                                cookies.put(cookieName1.getText(), cookieVal1.getText());
+                            if (!cookieName2.getText().isEmpty())
+                                cookies.put(cookieName2.getText(), cookieVal2.getText());
+                            if (!cookieName3.getText().isEmpty())
+                                cookies.put(cookieName3.getText(), cookieVal3.getText());
+                        } else cookies.put("bbe_data", "a%3A3%3A%7Bs%3A2%3A%22uk%22%3Bs%3A12%3A%22O1EKcz8nI0G1%22%3Bs%" +
+                                "3A3%3A%22uid%22%3Bi%3A3497771%3Bs%3A3%3A%22sid%22%3Bs%3A20%3A%226BGM1c8HtXd9D9tOPdCk%22%3B%7D");
 
                         Main.execute(cookies);
                         return null;
                     }
                 };
-                Thread generalThread = new Thread(task);
+                generalThread = new Thread(task);
                 generalThread.start();
 
 
@@ -117,7 +123,7 @@ public class GuiStart extends Application {
         countVisited.setStyle("-fx-border-style: solid; -fx-border-width: 2px; -fx-border-radius: 3px; -fx-background-color: antiquewhite");
         countVisited.setMinWidth(80);
         countVisited.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
-        TextArea text = new TextArea();
+        text = new TextArea();
         text.setMinHeight(200);
         text.setMinWidth(600);
         text.setEditable(false);
@@ -128,6 +134,9 @@ public class GuiStart extends Application {
         cookieVal2 = new TextField();
         cookieName3 = new TextField();
         cookieVal3 = new TextField();
+
+        checkBox = new CheckBox("default cookie");
+
 
         HBox firstCookie = new HBox(cookieName1, cookieVal1);
         HBox secondCookie = new HBox(cookieName2, cookieVal2);
@@ -149,7 +158,7 @@ public class GuiStart extends Application {
 
 
 
-        vBox.getChildren().addAll(firstCookie, secondCookie, thirdCookie, loaded, visited, text, buttons);
+        vBox.getChildren().addAll(firstCookie, secondCookie, thirdCookie, checkBox, loaded, visited, text, buttons);
         anchorPane.getChildren().add(vBox);
         Stage stage = new Stage(StageStyle.DECORATED);
         stage.setScene(new Scene(anchorPane, 600, 400));
@@ -163,18 +172,18 @@ public class GuiStart extends Application {
 
 
     public static void updCountVisitLinks(int start){
-        if (start > 0) countVisit = start;
-        else countVisit++;
+        if (start > 0) countVisit.set(start);
+        else countVisit.getAndIncrement();
         countVisited.setText(String.valueOf(countVisit));
     }
     public static void updText(){
-        count ++;
-        countPoint++;
+        count.getAndIncrement();
+        countPoint.getAndIncrement();
         countLoaded.setText(String.valueOf(count));
         if (countText > 1048576) text.setText("............... page .............");
-        if (countPoint > 200) {
+        if (countPoint.get() > 200) {
             text.setText(text.getText() + "\n");
-            countPoint = 0;
+            countPoint.set(0);
         }
 
 
@@ -200,12 +209,13 @@ public class GuiStart extends Application {
                 break;
             case -1:
                 res = "...FATAL";
-                countFatal++; //TODO
+                countFatal++;
                 break;
 
 
         }
         text.setText(text.getText() + "\n" + res);
+        if (countFatal > 100) closeGenThread();
     }
 
     public static void updTextarea(String s){
@@ -214,5 +224,10 @@ public class GuiStart extends Application {
         }catch (NullPointerException e){
             text.setText(s);
         }
+    }
+
+    private static void closeGenThread(){
+        Main.stop();
+        //generalThread.interrupt();
     }
 }
