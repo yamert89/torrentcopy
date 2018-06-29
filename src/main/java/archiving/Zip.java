@@ -14,9 +14,9 @@ public class Zip {
             for (File f :
                     file.listFiles()) {
                 String fName = f.getName();
-                String shortFName = fName.substring(fName.length() - 8, fName.length());
-                int idxpoint = shortFName.indexOf(".");
-                zipOutputStream.putNextEntry(new ZipEntry(file.getName() + shortFName.substring(idxpoint, shortFName.length())));
+                //String shortFName = fName.substring(fName.length() - 8, fName.length());
+                //int idxpoint = shortFName.indexOf(".");
+                zipOutputStream.putNextEntry(new ZipEntry(fName));
                 InputStream inputStream = new FileInputStream(f);
                 byte[] arr = new byte[1024];
                 while (inputStream.available() > 0) {

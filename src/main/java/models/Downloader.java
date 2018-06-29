@@ -1,7 +1,6 @@
 package models;
 
 import archiving.Zip;
-import javafx.application.Platform;
 import org.jsoup.Connection;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -67,7 +66,7 @@ public abstract class Downloader {
 
         System.out.println("Downloaded: " + fileTor + "\n" + URL);
             /*int finalSum = executor.Main.sum();*/
-        Platform.runLater(gui.GuiStart::updText);
+        //Platform.runLater(gui.GuiStart::updText); //TODO uncomment
 
         Zip.zip(dir.toFile());
 

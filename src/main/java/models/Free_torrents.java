@@ -70,7 +70,7 @@ public class Free_torrents extends Downloader {
             downloadTorrent();
 
             //prepare nameFolder
-            String nameCurrentFolder = name.replaceAll("[<>?\\\\/*;:]","");
+            String nameCurrentFolder = name.replaceAll("[<>?\\\\/*;:|]","");
 
             dir = Files.createDirectories(Paths.get(nameFolder + "/" + contentPath + "/" + nameCurrentFolder));
 
@@ -99,10 +99,16 @@ public class Free_torrents extends Downloader {
     }
 
     @Override
-    public void getBody(Element previous) { //TODO Исправить. Выдает только заголовок
+    public void getBody(Element previous) {
 
         //body = elements.first().html();
-        body = elements.first().getElementsByTag("span").first().html();
+        elements.first().getElementsByClass("sp-wrap").remove();
+        elements.first().getElementsByClass("clear").remove();
+        elements.first().getElementsByTag("table").remove();
+        body = elements.first().html();
+
+        //body = builder.toString();
+
     }
 
     @Override
