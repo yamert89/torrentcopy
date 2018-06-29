@@ -21,7 +21,7 @@ public class Main {
     private static boolean stopped;
     private static int startIndex = 0;
     private static int endIndex = 202800;
-    private static int startVal;
+    //private static int startVal;
     public static AtomicInteger downloadedCounter = new AtomicInteger();
 
     //public static BlockingDeque<String> set = new LinkedBlockingDeque<>();
@@ -32,8 +32,8 @@ public class Main {
 
         if (Files.exists(Paths.get("E:/saveCollection"))) collectInit();
 
-        Platform.runLater(() -> GuiStart.updCountVisitLinks(startVal));
-        startVal = 0;
+        Platform.runLater(() -> GuiStart.updCountVisitLinks(startIndex));
+        //startVal = 0;
 
 
         Connection.Response response1 = null;
@@ -112,10 +112,11 @@ public class Main {
             ObjectInputStream in = new ObjectInputStream(new FileInputStream("E:/saveCollection"));
 
             startIndex = in.readInt();
-            startVal = startIndex;
+            in.close();
+           // startVal = startIndex;
 
         } catch (IOException e) {
-            stackTrace(e);
+            e.printStackTrace();
         }
     }
 
@@ -136,28 +137,15 @@ public class Main {
             out.flush();
             out.close();
         } catch (IOException e) {
-            stackTrace(e);
+            e.printStackTrace();
         }
 
     }
 
-    public static void stackTrace(Exception e){
-        /*StackTraceElement[] trace = e.getStackTrace();
-        for (StackTraceElement element :
-                trace) {
-            try {
-                set.putFirst(element.toString());
-            } catch (InterruptedException e1) {
-                e1.printStackTrace();
-            }
-        }*/
-    }
 
 
-    public static int rnd(int min, int max) {
-        max -= min;
-        return (int) (Math.random() * ++max) + min;
-    }
+
+
 
 
 

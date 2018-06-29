@@ -20,10 +20,9 @@ public class Free_torrentsTask extends AbstractTask {
 
     @Override
     public void run() {
-        System.out.println(Thread.currentThread().toString() + " started");
+        //System.out.println(Thread.currentThread().toString() + " started");
 
-        /*boolean downloaded = new RutrackerTask(bb_session, bb_t).download(String.valueOf(index));
-        if (downloaded) downloadedCounter.getAndIncrement();*/ //TODO uncomment
+
         Free_torrents freeTorrents = new Free_torrents("K:\\save\\FreeTorents", cookies, String.valueOf(index));
 
         try {
@@ -40,7 +39,7 @@ public class Free_torrentsTask extends AbstractTask {
         }
         int status = freeTorrents.download();
         Platform.runLater(() -> GuiStart.updCountVisitLinks(0));
-        Platform.runLater(()->GuiStart.updText(status));
-        System.out.println(Thread.currentThread().toString() + " finished");
+        Platform.runLater(()->GuiStart.updText(status, index));
+        //System.out.println(Thread.currentThread().toString() + " finished");
     }
 }

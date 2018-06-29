@@ -61,6 +61,8 @@ public class GuiStart extends Application {
             e.printStackTrace();
         }
 
+        primaryStage.setOnCloseRequest(event -> closeGenThread());
+
         AnchorPane anchorPane = new AnchorPane();
         VBox vBox = new VBox();
         vBox.setAlignment(Pos.CENTER);
@@ -80,8 +82,16 @@ public class GuiStart extends Application {
                                 cookies.put(cookieName2.getText(), cookieVal2.getText());
                             if (!cookieName3.getText().isEmpty())
                                 cookies.put(cookieName3.getText(), cookieVal3.getText());
-                        } else cookies.put("bbe_data", "a%3A3%3A%7Bs%3A2%3A%22uk%22%3Bs%3A12%3A%22O1EKcz8nI0G1%22%3Bs%" +
-                                "3A3%3A%22uid%22%3Bi%3A3497771%3Bs%3A3%3A%22sid%22%3Bs%3A20%3A%226BGM1c8HtXd9D9tOPdCk%22%3B%7D");
+                        } else {
+                            cookies.put("bbe_data", "a%3A3%3A%7Bs%3A2%3A%22uk%22%3Bs%3A12%3A%22O1EKcz8nI0G1%22%3Bs%" +
+                                    "3A3%3A%22uid%22%3Bi%3A3497771%3Bs%3A3%3A%22sid%22%3Bs%3A20%3A%226BGM1c8HtXd9D9tOPdCk%22%3B%7D");
+                            cookies.put("PHPSESSID","0e5bc106i30q4mb3ovbn3pldk3");
+                            cookies.put("SLG_GWPT_Show_Hide_tmp","1");
+                            cookies.put("SLG_wptGlobTipTmp","1");
+                            cookies.put("host131023","5fn5/f63oqLg6Onk7KO8vb3q5Ors7+T5v6P9+qI=");
+                            cookies.put("utm131023","DosvQQmv3hkE");
+
+                        }
 
                         Main.execute(cookies);
                         return null;
@@ -176,21 +186,14 @@ public class GuiStart extends Application {
         else countVisit.getAndIncrement();
         countVisited.setText(String.valueOf(countVisit));
     }
-    public static void updText(){
+    public static void updCountLoadedLinks(){
         count.getAndIncrement();
-        countPoint.getAndIncrement();
-        countLoaded.setText(String.valueOf(count));
-        if (countText > 1048576) text.setText("............... page .............");
-        if (countPoint.get() > 200) {
-            text.setText(text.getText() + "\n");
-            countPoint.set(0);
-        }
+        //countPoint.getAndIncrement();
+        countLoaded.setText(String.valueOf(count.get()));
 
-
-        text.setText(text.getText() + ".");
     }
 
-    public static void updText(int status){
+    public static void updText(int status, int index){
         /*STATUS_OK = 1;
         STATUS_NULL = 0;
         STATUS_EXIST = 2;
@@ -214,8 +217,18 @@ public class GuiStart extends Application {
 
 
         }
+        res += " - ";
+        res += String.valueOf(index);
         text.setText(text.getText() + "\n" + res);
         if (countFatal > 100) closeGenThread();
+        if (countText > 1048576) text.setText("............... page .............");
+        /*if (countPoint.get() > 200) {
+            text.setText(text.getText() + "\n");
+            countPoint.set(0);
+        }*/
+
+
+        //text.setText(text.getText() + ".");
     }
 
     public static void updTextarea(String s){

@@ -129,7 +129,7 @@ public class Rutracker {
 
             System.out.println("Downloaded: " + fileTor + "\n" + URL);
             /*int finalSum = executor.Main.sum();*/
-            Platform.runLater(()-> GuiStart.updText());
+            Platform.runLater(()-> GuiStart.updCountLoadedLinks());
 
 
 
