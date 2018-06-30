@@ -20,7 +20,7 @@ public class Main {
     private static ExecutorService service;
     private static boolean stopped;
     private static int startIndex = 0;
-    private static int endIndex = 202800;
+    private static int endIndex = 230000;
     //private static int startVal;
     public static AtomicInteger downloadedCounter = new AtomicInteger();
 
@@ -87,7 +87,16 @@ public class Main {
             }
 
         }
-
+        stop();
+        while(!stopped){
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        service.shutdownNow();
+        System.exit(0);
 
 
 

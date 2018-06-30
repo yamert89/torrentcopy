@@ -221,7 +221,7 @@ public class GuiStart extends Application {
         res += String.valueOf(index);
         text.setText(text.getText() + "\n" + res);
         if (countFatal > 100) closeGenThread();
-        if (countText > 1048576) text.setText("............... page .............");
+        if (text.getText().length() > 10000) text.setText("............... page .............");
         /*if (countPoint.get() > 200) {
             text.setText(text.getText() + "\n");
             countPoint.set(0);

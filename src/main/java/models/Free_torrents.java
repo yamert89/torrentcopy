@@ -8,6 +8,7 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
 
@@ -61,7 +62,8 @@ public class Free_torrents extends Downloader {
             categoryPath = sb.toString();
 
             contentPath = categoryPath.replace('»','/');
-            if (Files.exists(Paths.get(nameFolder + contentPath + "/" + id))) {
+            Path path = Paths.get(nameFolder + "/" + contentPath + "/" + name + ".zip");
+            if (Files.exists(path)) {
                 System.out.println("torrent already exist:" + name + " "+ id);
 
                 return STATUS_EXIST;
@@ -96,6 +98,8 @@ public class Free_torrents extends Downloader {
     @Override
     public void getName() {
         name = document.getElementsByClass("maintitle").get(0).text();
+        name = name.replaceAll("[<>?\\\\/*;:|]","");
+
     }
 
     @Override
