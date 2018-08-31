@@ -43,9 +43,9 @@ public class Main {
 
             Jsoup.connect("https://rutracker.org/forum/login.php")
                     .referrer("https://rutracker.org/forum/login.php")
-                    .data("login_username", "shurup7777")
-                    .data("login_password", "yamert89")
-                    .data("login", "")
+                    .data("login_username", "***")
+                    .data("login_password", "***")
+                    .data("login", "***")
                     .timeout(40000)
                     .cookies(response1.cookies())
                     .method(Connection.Method.POST)
