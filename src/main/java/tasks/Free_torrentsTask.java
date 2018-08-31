@@ -28,8 +28,8 @@ public class Free_torrentsTask extends AbstractTask {
         try {
             Jsoup.connect("http://login.free-torrents.org/forum/login.php")
                     .referrer("http://free-torrents.org/forum/indexer1.php")
-                    .data("login_username", "shurup7777")
-                    .data("login_password", "yamert89")
+                    .data("login_username", "***")
+                    .data("login_password", "***")
                     .timeout(40000)
                     .method(Connection.Method.POST)
                     .execute();
