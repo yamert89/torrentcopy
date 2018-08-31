@@ -3,9 +3,9 @@ package executor;
 import gui.GuiStart;
 import javafx.application.Platform;
 import org.jsoup.Connection;
-import org.jsoup.Jsoup;
 import tasks.Free_torrentsTask;
 
+import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -19,16 +19,15 @@ public class Main {
    // private static CopyOnWriteArrayList<Boolean> collection = new CopyOnWriteArrayList<Boolean>();
     private static ExecutorService service;
     private static boolean stopped;
-    private static int startIndex = 0;
+    private static int startIndex = 210000;
     private static int endIndex = 230000;
-    //private static int startVal;
     public static AtomicInteger downloadedCounter = new AtomicInteger();
 
     //public static BlockingDeque<String> set = new LinkedBlockingDeque<>();
     //public static ConcurrentMap<String, Integer> counter = new ConcurrentHashMap<>();
     //public static IntegerProperty integerProperty = new SimpleIntegerProperty(0);
 
-    public static void execute(Map<String, String> cookies) {
+    public static void execute(Map<String, String> cookies, boolean shutdown) {
 
         if (Files.exists(Paths.get("E:/saveCollection"))) collectInit();
 
@@ -37,7 +36,7 @@ public class Main {
 
 
         Connection.Response response1 = null;
-        try {
+       /* try {
             response1 = Jsoup.connect("https://rutracker.org/forum/login.php")
                     .method(Connection.Method.GET).timeout(40000)
                     .execute();
@@ -54,7 +53,7 @@ public class Main {
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         service = Executors.newFixedThreadPool(20);
         ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) service;
@@ -96,25 +95,17 @@ public class Main {
             }
         }
         service.shutdownNow();
+        Desktop desktop = Desktop.getDesktop();
+        try {
+            desktop.open(new File("E:/shutdown.cmd"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.exit(0);
 
-
-
-
-
     }
 
-    public static int sum(){
-        int sum = 0;
-        /*for (Integer val :
-                counter.values()) {
-            sum += val;
 
-        }*/
-        return sum;
-
-    }
-    
 
     private static void collectInit(){
         try {
@@ -122,7 +113,6 @@ public class Main {
 
             startIndex = in.readInt();
             in.close();
-           // startVal = startIndex;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -131,7 +121,6 @@ public class Main {
 
     @Override
     protected void finalize() throws Throwable {
-        //super.finalize();
         stop();
 
     }
@@ -140,7 +129,6 @@ public class Main {
         stopped = true;
         ObjectOutputStream out = null;
         try {
-
             out = new ObjectOutputStream(new FileOutputStream("E:/saveCollection"));
             out.writeInt(startIndex);
             out.flush();

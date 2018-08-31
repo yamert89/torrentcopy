@@ -51,10 +51,6 @@ public class WalkFileRename {
 
     }
 
-    private void renameFolder(){
-
-    }
-
 
 
     public static void main(String[] args) {

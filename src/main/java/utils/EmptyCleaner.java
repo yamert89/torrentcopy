@@ -14,7 +14,7 @@ public class EmptyCleaner {
             System.out.println();
             Files.walk(Paths.get("K:\\save\\FreeTorents"), FileVisitOption.FOLLOW_LINKS).forEach(path -> {
                 String s = path.getFileName().toString();
-                if ((path.toFile().listFiles() == null || path.toFile().listFiles().length == 0) && !s.endsWith(".zip")) {
+                if (Files.isDirectory(path) && (path.toFile().listFiles() == null || path.toFile().listFiles().length == 0)) {
                     try {
                         Files.delete(path);
                         System.out.println("delete " + path.getFileName());

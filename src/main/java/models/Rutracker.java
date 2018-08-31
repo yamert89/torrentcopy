@@ -37,27 +37,14 @@ public class Rutracker {
         String nameFolder = "K:/save/";
         Path dir;
 
-
-
-
-
         try {
-
-
 
             document = Jsoup.connect(URL).userAgent("Mozilla").timeout(40000).referrer(URL).get();
             name = document.getElementsByClass("topic-title-" + id).first().text();
-
             elements = document.getElementsByClass("post_body");
-
             body = elements.first().html();
-
             String urlIMG = elements.first().getElementsByTag("var").first().attr("title");
-
             elements = document.getElementsByAttributeValue("class", "nav w100 pad_2").first().children();
-
-
-
             StringBuilder sb = new StringBuilder();
 
             for (Element element :
@@ -66,15 +53,12 @@ public class Rutracker {
             }
 
             String categoryPath = sb.toString();
-
             String contentPath = categoryPath.replace('»','/');
             if (Files.exists(Paths.get(nameFolder + contentPath + "/" + id))) {
                 System.out.println("torrent already exist:" + name + " "+ id);
 
                 return false;
             }
-
-
 
             Connection.Response response = Jsoup.connect("https://rutracker.org/forum/dl.php?t=" + id).header("Content-Type", "text/*")
                     .cookie("bb_ssl", "1")
@@ -98,12 +82,6 @@ public class Rutracker {
             dir = Files.createDirectories(Paths.get(nameFolder + contentPath + "/" + id));
 
 
-
-
-
-
-
-
             Path fileTor = dir.resolve(id + ".torrent");
                     //Paths.get(dir.toAbsolutePath().toString() + id + ".torrent");
 
@@ -120,24 +98,12 @@ public class Rutracker {
             OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream( fileName.toFile()), "UTF-8");
             prop.store(writer,null);
 
-
-
             Files.write(fileTor, response.bodyAsBytes());
             Files.write(fileBody, body.getBytes());
             writer.close();
-
-
             System.out.println("Downloaded: " + fileTor + "\n" + URL);
             /*int finalSum = executor.Main.sum();*/
             Platform.runLater(()-> GuiStart.updCountLoadedLinks());
-
-
-
-
-
-
-
-
 
         } catch (IOException e) {
             e.printStackTrace();

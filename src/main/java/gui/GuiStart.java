@@ -44,6 +44,7 @@ public class GuiStart extends Application {
     public static int countFatal;
     private PrintStream errorStream;
     private static Thread generalThread;
+    private boolean shutdown;
 
     public static void main(String[] args) {
         launch(args);
@@ -93,14 +94,12 @@ public class GuiStart extends Application {
 
                         }
 
-                        Main.execute(cookies);
+                        Main.execute(cookies, shutdown);
                         return null;
                     }
                 };
                 generalThread = new Thread(task);
                 generalThread.start();
-
-
 
             }
         });
@@ -122,10 +121,6 @@ public class GuiStart extends Application {
         countLoaded.setStyle("-fx-border-style: solid; -fx-border-width: 2px; -fx-border-radius: 3px; -fx-background-color: antiquewhite");
         countLoaded.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
 
-
-
-
-
         Label label = new Label("Загружено ссылок:   ");
         Label label2 = new Label("Проверено ссылок:  ");
 
@@ -133,6 +128,7 @@ public class GuiStart extends Application {
         countVisited.setStyle("-fx-border-style: solid; -fx-border-width: 2px; -fx-border-radius: 3px; -fx-background-color: antiquewhite");
         countVisited.setMinWidth(80);
         countVisited.setNodeOrientation(NodeOrientation.RIGHT_TO_LEFT);
+
         text = new TextArea();
         text.setMinHeight(200);
         text.setMinWidth(600);
@@ -147,7 +143,6 @@ public class GuiStart extends Application {
 
         checkBox = new CheckBox("default cookie");
 
-
         HBox firstCookie = new HBox(cookieName1, cookieVal1);
         HBox secondCookie = new HBox(cookieName2, cookieVal2);
         HBox thirdCookie = new HBox(cookieName3, cookieVal3);
@@ -155,27 +150,25 @@ public class GuiStart extends Application {
         HBox visited = new HBox(label2, countVisited);
         HBox buttons = new HBox(btnStart, btnStop);
 
+        CheckBox shut = new CheckBox("Выключить компютер при завершении");
+
         firstCookie.setAlignment(Pos.CENTER);
         secondCookie.setAlignment(Pos.CENTER);
         thirdCookie.setAlignment(Pos.CENTER);
         loaded.setAlignment(Pos.CENTER);
         visited.setAlignment(Pos.CENTER);
         buttons.setAlignment(Pos.CENTER);
+        shut.setAlignment(Pos.CENTER);
+        shut.setOnMouseClicked(event -> {
+            shutdown = shut.isSelected();
+        });
 
-
-
-
-
-
-
-        vBox.getChildren().addAll(firstCookie, secondCookie, thirdCookie, checkBox, loaded, visited, text, buttons);
+        vBox.getChildren().addAll(firstCookie, secondCookie, thirdCookie, checkBox, loaded, visited, text, buttons, shut);
         anchorPane.getChildren().add(vBox);
         Stage stage = new Stage(StageStyle.DECORATED);
         stage.setScene(new Scene(anchorPane, 600, 400));
 
-
         stage.show();
-
 
     }
 
